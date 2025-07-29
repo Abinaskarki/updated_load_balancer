@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Load Balancer Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🚀 Advanced Load Balancer Dashboard</h1>
+        <p>Real-time monitoring, analytics, and management</p>
+        <div class="status-indicator" id="connectionStatus"></div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="main-content">
+          <!-- Overview Stats -->
+          <div class="card">
+            <h2>📊 System Overview</h2>
+            <div class="stats-overview">
+              <div class="stat-item">
+                <div class="label">Algorithm</div>
+                <div class="value" id="algorithm">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="label">Total Servers</div>
+                <div class="value" id="totalServers">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="label">Healthy Servers</div>
+                <div class="value" id="healthyServers">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="label">Active Sessions</div>
+                <div class="value" id="activeSessions">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="label">Total Requests</div>
+                <div class="value" id="totalRequests">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="label">Error Rate</div>
+                <div class="value" id="overallErrorRate">0%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="chart-grid">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">Request Distribution</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="requestChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">Response Times</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="responseTimeChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">Active Connections</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="connectionChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">Error Trends</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="errorChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar">
+          <!-- Server Status -->
+          <div class="card">
+            <h2>🖥️ Server Status</h2>
+            <div class="servers-container" id="serversList">
+              <!-- Servers will be populated here -->
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="controls-panel">
+            <div class="control-section">
+              <h3>⚙️ Monitoring</h3>
+              <div class="refresh-controls">
+                <div class="auto-refresh-indicator" id="refreshIndicator"></div>
+                <select id="refreshInterval">
+                  <option value="1000">1s refresh</option>
+                  <option value="2000">2s refresh</option>
+                  <option value="5000" selected>5s refresh</option>
+                  <option value="10000">10s refresh</option>
+                </select>
+                <button class="btn btn-small" onclick="toggleAutoRefresh()">
+                  <span id="refreshButtonText">Pause</span>
+                </button>
+              </div>
+              <div class="last-update" id="lastUpdate">Loading...</div>
+            </div>
+
+            <div class="control-section">
+              <h3>➕ Add Server</h3>
+              <div class="form-row">
+                <div class="input-group">
+                  <label>Host:</label>
+                  <input type="text" id="newServerHost" placeholder="localhost" value="localhost">
+                </div>
+                <div class="input-group">
+                  <label>Port:</label>
+                  <input type="number" id="newServerPort" placeholder="3004" value="3004" min="1" max="65535">
+                </div>
+                <button class="btn btn-success" onclick="addServer()">Add Server</button>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h3>➖ Remove Server</h3>
+              <div class="form-row">
+                <div class="input-group">
+                  <label>Host:</label>
+                  <input type="text" id="removeServerHost" placeholder="localhost" value="localhost">
+                </div>
+                <div class="input-group">
+                  <label>Port:</label>
+                  <input type="number" id="removeServerPort" placeholder="3004" value="3004" min="1" max="65535">
+                </div>
+                <button class="btn btn-danger" onclick="removeServer()">Remove Server</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let charts = {};
+      let autoRefresh = true;
+      let refreshInterval = 5000;
+      let refreshTimer;
+      let previousData = null;
+
+      // Initialize charts
+      function initCharts() {
+        const commonOptions = {
+          responsive: false,
+          maintainAspectRatio: false,
+          aspectRatio: 1,
+          layout: {
+            padding: 10,
+          },
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                padding: 10,
+                boxWidth: 12,
+                font: {
+                  size: 10,
+                },
+              },
+            },
+          },
+          animation: {
+            duration: 300,
+          },
+        };
+
+        // Request Distribution (Doughnut)
+        charts.request = new Chart(document.getElementById("requestChart"), {
+          type: "doughnut",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                data: [],
+                backgroundColor: [
+                  "#FF6384",
+                  "#36A2EB",
+                  "#FFCE56",
+                  "#4BC0C0",
+                  "#9966FF",
+                  "#FF9F40",
+                  "#FF6384",
+                  "#C9CBCF",
+                ],
+                borderWidth: 2,
+                borderColor: "#fff",
+              },
+            ],
+          },
+          options: {
+            ...commonOptions,
+            cutout: "60%",
+          },
+        });
+
+        // Response Times (Bar)
+        charts.responseTime = new Chart(
+          document.getElementById("responseTimeChart"),
+          {
+            type: "bar",
+            data: {
+              labels: [],
+              datasets: [
+                {
+                  label: "Avg Response Time (ms)",
+                  data: [],
+                  backgroundColor: "rgba(54, 162, 235, 0.8)",
+                  borderColor: "rgba(54, 162, 235, 1)",
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              ...commonOptions,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Response Time (ms)",
+                  },
+                },
+              },
+            },
+          }
+        );
+
+        // Active Connections (Line)
+        charts.connection = new Chart(
+          document.getElementById("connectionChart"),
+          {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: [
+                {
+                  label: "Active Connections",
+                  data: [],
+                  borderColor: "#4BC0C0",
+                  backgroundColor: "rgba(75, 192, 192, 0.2)",
+                  tension: 0.4,
+                  borderWidth: 3,
+                  fill: true,
+                },
+              ],
+            },
+            options: {
+              ...commonOptions,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Connections",
+                  },
+                },
+              },
+            },
+          }
+        );
+
+        // Error Trends (Line)
+        charts.error = new Chart(document.getElementById("errorChart"), {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Error Rate (%)",
+                data: [],
+                borderColor: "#FF6384",
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                tension: 0.4,
+                borderWidth: 3,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            ...commonOptions,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                title: {
+                  display: true,
+                  text: "Error Rate (%)",
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Fetch data from load balancer
+      async function fetchStats() {
+        try {
+          const response = await fetch("/lb/stats");
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          const data = await response.json();
+          updateDashboard(data);
+          updateConnectionStatus(true);
+        } catch (error) {
+          console.error("Fetch error:", error);
+          updateConnectionStatus(false);
+          showToast(`Connection error: ${error.message}`, "error");
+        }
+      }
+
+      // Update dashboard with new data
+      function updateDashboard(data) {
+        // Update overview stats
+        updateOverviewStats(data);
+
+        // Update server list
+        updateServersList(data.servers || {});
+
+        // Update charts
+        updateCharts(data.servers || {});
+
+        // Update last refresh time
+        document.getElementById(
+          "lastUpdate"
+        ).textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+
+        previousData = data;
+      }
+
+      // Update overview statistics
+      function updateOverviewStats(data) {
+        document.getElementById("algorithm").textContent =
+          data.algorithm || "-";
+        document.getElementById("totalServers").textContent =
+          data.total_servers || "-";
+        document.getElementById("healthyServers").textContent =
+          data.healthy_servers || "-";
+        document.getElementById("activeSessions").textContent =
+          data.active_sessions || "-";
+
+        // Calculate totals
+        const servers = data.servers || {};
+        const totalRequests = Object.values(servers).reduce(
+          (sum, server) => sum + server.total_requests,
+          0
+        );
+        const totalErrors = Object.values(servers).reduce(
+          (sum, server) => sum + server.total_errors,
+          0
+        );
+        const overallErrorRate =
+          totalRequests > 0
+            ? ((totalErrors / totalRequests) * 100).toFixed(2)
+            : 0;
+
+        document.getElementById("totalRequests").textContent = totalRequests;
+        document.getElementById(
+          "overallErrorRate"
+        ).textContent = `${overallErrorRate}%`;
+      }
+
+      // Update servers list
+      function updateServersList(servers) {
+        const container = document.getElementById("serversList");
+        container.innerHTML = "";
+
+        Object.entries(servers).forEach(([serverKey, server]) => {
+          const serverItem = document.createElement("div");
+          serverItem.className = "server-item fade-in";
+
+          const healthClass = server.is_healthy
+            ? "status-healthy"
+            : "status-unhealthy";
+          const healthText = server.is_healthy ? "✅ Healthy" : "❌ Down";
+
+          serverItem.innerHTML = `
+                    <div class="server-info">
+                        <h4>${serverKey}</h4>
+                        <div class="details">
+                            ${server.total_requests} requests • ${server.total_errors} errors
+                        </div>
+                        <div class="details">
+                            ${server.avg_response_time} avg response
+                        </div>
+                    </div>
+                    <div class="server-status">
+                        <div class="status-badge ${healthClass}">${healthText}</div>
+                        <div class="connection-count">${server.active_connections} active</div>
+                    </div>
+                `;
+
+          container.appendChild(serverItem);
+        });
+      }
+
+      // Update charts
+      function updateCharts(servers) {
+        const serverKeys = Object.keys(servers);
+        const serverData = Object.values(servers);
+
+        // If no servers, show empty charts
+        if (serverKeys.length === 0) {
+          Object.values(charts).forEach(chart => {
+            chart.data.labels = [];
+            chart.data.datasets[0].data = [];
+            chart.update("none");
+          });
+          return;
+        }
+
+        // Request Distribution - include all servers, even unhealthy ones
+        charts.request.data.labels = serverKeys;
+        charts.request.data.datasets[0].data = serverData.map(
+          (s) => s.total_requests || 0
+        );
+        charts.request.update("none");
+
+        // Response Times - only show healthy servers with valid response times
+        const healthyServers = serverData.filter(s => s.is_healthy && s.avg_response_time);
+        const healthyServerKeys = serverKeys.filter((key, index) => serverData[index].is_healthy && serverData[index].avg_response_time);
+        
+        charts.responseTime.data.labels = healthyServerKeys;
+        charts.responseTime.data.datasets[0].data = healthyServers.map((s) =>
+          parseFloat(s.avg_response_time.replace("s", "")) * 1000
+        );
+        charts.responseTime.update("none");
+
+        // Active Connections - show all servers including those with 0 connections
+        charts.connection.data.labels = serverKeys;
+        charts.connection.data.datasets[0].data = serverData.map(
+          (s) => s.active_connections || 0
+        );
+        charts.connection.update("none");
+
+        // Error Rates - show all servers, including those with errors
+        charts.error.data.labels = serverKeys;
+        charts.error.data.datasets[0].data = serverData.map((s) => {
+          const errorRate = s.error_rate || "0%";
+          return parseFloat(errorRate.replace("%", ""));
+        });
+        charts.error.update("none");
+      }
+
+      // Update connection status indicator
+      function updateConnectionStatus(connected) {
+        const indicator = document.getElementById("connectionStatus");
+        const refreshIndicator = document.getElementById("refreshIndicator");
+
+        if (connected) {
+          indicator.className = "status-indicator";
+          if (autoRefresh) {
+            refreshIndicator.className = "auto-refresh-indicator";
+          } else {
+            refreshIndicator.className = "auto-refresh-indicator paused";
+          }
+        } else {
+          indicator.className = "status-indicator offline";
+          refreshIndicator.className = "auto-refresh-indicator paused";
+        }
+      }
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `${type}-toast`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add("show"), 100);
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => document.body.removeChild(toast), 300);
+        }, 3000);
+      }
+
+      // Add server
+      async function addServer() {
+        const host = document.getElementById("newServerHost").value.trim();
+        const port = parseInt(document.getElementById("newServerPort").value);
+
+        if (!host || !port || port < 1 || port > 65535) {
+          showToast("Please enter valid host and port (1-65535)", "error");
+          return;
+        }
+
+        try {
+          const response = await fetch("/lb/add-server", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ host, port }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            showToast(`Server ${host}:${port} added successfully`, "success");
+            fetchStats(); // Refresh data immediately
+          } else {
+            showToast(`Error: ${result.error || "Unknown error"}`, "error");
+          }
+        } catch (error) {
+          showToast(`Error adding server: ${error.message}`, "error");
+        }
+      }
+
+      // Remove server
+      async function removeServer() {
+        const host = document.getElementById("removeServerHost").value.trim();
+        const port = parseInt(
+          document.getElementById("removeServerPort").value
+        );
+
+        if (!host || !port) {
+          showToast("Please enter both host and port", "error");
+          return;
+        }
+
+        try {
+          const response = await fetch("/lb/remove-server", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ host, port }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            showToast(`Server ${host}:${port} removed successfully`, "success");
+            fetchStats(); // Refresh data immediately
+          } else {
+            showToast(`Error: ${result.error || "Unknown error"}`, "error");
+          }
+        } catch (error) {
+          showToast(`Error removing server: ${error.message}`, "error");
+        }
+      }
+
+      // Toggle auto refresh
+      function toggleAutoRefresh() {
+        autoRefresh = !autoRefresh;
+        const button = document.getElementById("refreshButtonText");
+
+        if (autoRefresh) {
+          startAutoRefresh();
+          button.textContent = "Pause";
+        } else {
+          clearInterval(refreshTimer);
+          button.textContent = "Resume";
+        }
+
+        updateConnectionStatus(true);
+      }
+
+      // Start auto refresh
+      function startAutoRefresh() {
+        clearInterval(refreshTimer);
+        refreshTimer = setInterval(fetchStats, refreshInterval);
+      }
+
+      // Initialize dashboard
+      document.addEventListener("DOMContentLoaded", function () {
+        initCharts();
+        fetchStats();
+        startAutoRefresh();
+
+        // Handle refresh interval change
+        document
+          .getElementById("refreshInterval")
+          .addEventListener("change", function (e) {
+            refreshInterval = parseInt(e.target.value);
+            if (autoRefresh) {
+              startAutoRefresh();
+            }
+          });
+
+        // Add keyboard shortcuts
+        document.addEventListener("keydown", function (e) {
+          if (e.ctrlKey || e.metaKey) {
+            switch (e.key) {
+              case "r":
+                e.preventDefault();
+                fetchStats();
+                break;
+              case " ":
+                e.preventDefault();
+                toggleAutoRefresh();
+                break;
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
