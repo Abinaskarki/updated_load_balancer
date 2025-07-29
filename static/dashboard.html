@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/static/styles.css" />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>"
     />
     <style>
       :root {
@@ -642,7 +642,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>⚖️ Load Balancer Dashboard</h1>
+        <h1> Load Balancer Dashboard</h1>
         <p>Real-time monitoring and intelligent management</p>
         <div class="status-indicator" id="connectionStatus"></div>
       </div>
@@ -680,7 +680,7 @@
       </div>
 
       <div class="servers-section">
-        <h2>🖥️ Server Status</h2>
+        <h2> Server Status</h2>
         <div class="servers-grid" id="serversGrid">
           <!-- Server cards will be populated here -->
         </div>
@@ -688,19 +688,19 @@
 
       <div class="charts-section">
         <div class="chart-container">
-          <div class="chart-title">📊 Request Distribution</div>
+          <div class="chart-title"> Request Distribution</div>
           <div class="chart-wrapper">
             <canvas id="requestChart" class="chart-canvas"></canvas>
           </div>
         </div>
         <div class="chart-container">
-          <div class="chart-title">⚡ Response Times</div>
+          <div class="chart-title"> Response Times</div>
           <div class="chart-wrapper">
             <canvas id="responseTimeChart" class="chart-canvas"></canvas>
           </div>
         </div>
         <div class="chart-container">
-          <div class="chart-title">❌ Error Rates</div>
+          <div class="chart-title"> Error Rates</div>
           <div class="chart-wrapper">
             <canvas id="errorChart" class="chart-canvas"></canvas>
           </div>
@@ -713,7 +713,7 @@
         </div>
       </div>
       <div class="controls">
-        <h2>⚙️ Management Controls</h2>
+        <h2> Management Controls</h2>
 
         <div class="control-group">
           <label for="refreshInterval">Refresh Interval:</label>
@@ -724,7 +724,7 @@
             <option value="10000">10 seconds</option>
           </select>
           <button class="btn btn-primary" onclick="toggleAutoRefresh()">
-            <span id="refreshButtonText">⏸️ Pause</span>
+            <span id="refreshButtonText"> Pause</span>
           </button>
         </div>
 
@@ -747,7 +747,7 @@
             max="65535"
           />
           <button class="btn btn-primary" onclick="addServer()">
-            ➕ Add Server
+             Add Server
           </button>
         </div>
 
@@ -1131,7 +1131,7 @@
               const healthClass = server.is_healthy
                 ? "health-up"
                 : "health-down";
-              const healthText = server.is_healthy ? "✅ UP" : "❌ DOWN";
+              const healthText = server.is_healthy ? " UP" : " DOWN";
               const lastCheck = server.last_health_check
                 ? new Date(server.last_health_check).toLocaleTimeString()
                 : "Never";
@@ -1260,7 +1260,7 @@
 
         const button = event.target;
         const originalText = button.innerHTML;
-        button.innerHTML = "⏳ Adding...";
+        button.innerHTML = " Adding...";
         button.disabled = true;
 
         try {
@@ -1324,7 +1324,7 @@
 
         const button = event.target;
         const originalText = button.innerHTML;
-        button.innerHTML = "⏳ Removing...";
+        button.innerHTML = " Removing...";
         button.disabled = true;
 
         try {
@@ -1366,11 +1366,11 @@
 
         if (autoRefresh) {
           startAutoRefresh();
-          button.textContent = "⏸️ Pause";
+          button.textContent = " Pause";
           showToast("Auto-refresh enabled", "success");
         } else {
           clearInterval(refreshTimer);
-          button.textContent = "▶️ Resume";
+          button.textContent = " Resume";
           showToast("Auto-refresh paused", "success");
         }
       }

@@ -48,7 +48,7 @@ class LoadBalancerMonitor:
         print("-" * 60)
         
         for server_key, server_info in stats['servers'].items():
-            health_status = "✅ UP" if server_info['is_healthy'] else "❌ DOWN"
+            health_status = "UP" if server_info['is_healthy'] else "DOWN"
             print(f"{server_key:<20} {health_status:<8} {server_info['active_connections']:<12} "
                   f"{server_info['total_requests']:<10} {server_info['total_errors']:<8} "
                   f"{server_info['avg_response_time']:<10}")

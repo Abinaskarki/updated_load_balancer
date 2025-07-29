@@ -2,7 +2,7 @@
 
 An advanced asynchronous load balancer implemented in Python using aiohttp with multiple algorithms, dynamic scaling, session persistence, and a **modern web-based monitoring dashboard**.
 
-## 🚀 Features
+## Features
 
 ### Load Balancing Algorithms
 
@@ -11,14 +11,14 @@ An advanced asynchronous load balancer implemented in Python using aiohttp with 
 
 ### Advanced Capabilities
 
-- **🌐 Web Dashboard**: Modern, real-time monitoring interface
+- **Web Dashboard**: Modern, real-time monitoring interface
 - **Dynamic Scaling**: Add/remove servers at runtime
 - **Session Persistence**: Sticky sessions using cookies
 - **Health Monitoring**: Automatic health checks with server recovery
 - **Load Reporting**: Real-time statistics and performance metrics
 - **Management API**: RESTful endpoints for administration
 
-## 📦 Quick Setup
+## Quick Setup
 
 1. **Install dependencies:**
 
@@ -48,20 +48,20 @@ An advanced asynchronous load balancer implemented in Python using aiohttp with 
    # Open browser to http://localhost:8080
    ```
 
-## 🌐 Web Dashboard
+## Web Dashboard
 
 Access the **modern web dashboard** at `http://localhost:8080` for:
 
-- 📊 **Real-time Charts**: Request distribution, response times, error rates
-- 🖥️ **Server Status**: Live server health and performance metrics
-- ⚙️ **Management Controls**: Add/remove servers with one click
-- 📱 **Responsive Design**: Works on desktop, tablet, and mobile
-- 🔄 **Auto-refresh**: Customizable refresh intervals (1-10 seconds)
-- 🎯 **Interactive UI**: Modern interface with toast notifications
+- **Real-time Charts**: Request distribution, response times, error rates
+- **Server Status**: Live server health and performance metrics
+- **Management Controls**: Add/remove servers with one click
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Auto-refresh**: Customizable refresh intervals (1-10 seconds)
+- **Interactive UI**: Modern interface with toast notifications
 
 The load balancer starts on `localhost:8080` with management endpoints available.
 
-## 🔧 Configuration
+## Configuration
 
 Edit `servers.json` to configure backend servers:
 
@@ -73,7 +73,7 @@ Edit `servers.json` to configure backend servers:
 ]
 ```
 
-## 📊 Management API
+## Management API
 
 | Endpoint            | Method | Description                    |
 | ------------------- | ------ | ------------------------------ |

@@ -40,7 +40,7 @@
    python load_test.py --requests 50 --concurrent 5
    ```
 
-## 🌐 Web Dashboard
+##  Web Dashboard
 
 The advanced web dashboard provides a modern, real-time monitoring interface with:
 
@@ -56,28 +56,28 @@ The advanced web dashboard provides a modern, real-time monitoring interface wit
 
 ### Dashboard Sections
 
-#### 📊 System Overview
+####  System Overview
 
 - Current load balancing algorithm
 - Total and healthy server counts
 - Active sessions
 - Overall request/error statistics
 
-#### 🖥️ Server Status
+####  Server Status
 
 - Real-time server health indicators
 - Active connection counts per server
 - Request/error statistics per server
 - Average response times
 
-#### 📈 Interactive Charts
+####  Interactive Charts
 
 - **Request Distribution**: Doughnut chart showing load distribution
 - **Response Times**: Bar chart of average response times
 - **Active Connections**: Line chart of current connections
 - **Error Trends**: Line chart of error rates over time
 
-#### ⚙️ Management Controls
+####  Management Controls
 
 - **Monitoring Controls**: Adjust refresh intervals, pause/resume auto-refresh
 - **Server Management**: Add/remove servers with immediate feedback
@@ -276,9 +276,9 @@ SERVER DETAILS:
 ------------------------------------------------------------
 Server               Health   Connections  Requests  Errors    Avg RT
 ------------------------------------------------------------
-localhost:3001       ✅ UP     2            45        1         0.125s
-localhost:3002       ✅ UP     1            44        0         0.156s
-localhost:3003       ❌ DOWN   0            43        2         0.198s
+localhost:3001        UP     2            45        1         0.125s
+localhost:3002        UP     1            44        0         0.156s
+localhost:3003        DOWN   0            43        2         0.198s
 ```
 
 ## Troubleshooting

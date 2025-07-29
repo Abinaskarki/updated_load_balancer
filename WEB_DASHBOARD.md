@@ -1,12 +1,12 @@
 # Web Dashboard Features Summary
 
-## 🌐 Modern Web-Based Monitoring Interface
+##  Modern Web-Based Monitoring Interface
 
 The Advanced Load Balancer now includes a comprehensive web-based monitoring dashboard that provides real-time insights and management capabilities through a modern, responsive web interface.
 
-## 🚀 Key Features
+##  Key Features
 
-### 📊 Real-Time Monitoring
+###  Real-Time Monitoring
 
 - **Live Statistics**: Auto-updating dashboard with customizable refresh intervals (1-10 seconds)
 - **Interactive Charts**: Beautiful visualizations using Chart.js
@@ -17,21 +17,21 @@ The Advanced Load Balancer now includes a comprehensive web-based monitoring das
 - **Connection Status**: Visual indicators showing system health
 - **Toast Notifications**: Instant feedback for all operations
 
-### 🖥️ Server Management
+###  Server Management
 
 - **Server Status Cards**: Real-time health indicators for each backend server
 - **Performance Metrics**: Active connections, request counts, error rates, response times
 - **Dynamic Operations**: Add/remove servers directly from the web interface
 - **Health Monitoring**: Visual health status with last check timestamps
 
-### 🎨 Modern UI/UX
+###  Modern UI/UX
 
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Gradient Styling**: Beautiful modern interface with glassmorphism effects
 - **Smooth Animations**: Fade-in effects and hover animations
 - **Accessibility**: Keyboard shortcuts and intuitive navigation
 
-### ⚙️ Advanced Controls
+###  Advanced Controls
 
 - **Auto-refresh Toggle**: Pause/resume real-time updates
 - **Refresh Intervals**: Choose from 1s, 2s, 5s, or 10s refresh rates
@@ -51,7 +51,7 @@ The Advanced Load Balancer now includes a comprehensive web-based monitoring das
 ### 2. Server Status Panel
 
 - Individual server cards with:
-  - Health status indicators (✅ UP / ❌ DOWN)
+  - Health status indicators ( UP /  DOWN)
   - Active connection counts
   - Total requests and errors
   - Average response times
@@ -82,12 +82,12 @@ The Advanced Load Balancer now includes a comprehensive web-based monitoring das
 - **Dashboard**: `http://localhost:8080/dashboard`
 - **API Stats**: `http://localhost:8080/lb/stats` (JSON)
 
-## ⌨️ Keyboard Shortcuts
+##  Keyboard Shortcuts
 
 - **Ctrl/Cmd + R**: Manual refresh data
 - **Ctrl/Cmd + Space**: Toggle auto-refresh pause/resume
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Automated Demo
 
@@ -116,7 +116,7 @@ python main.py
 # Open http://localhost:8080 in your browser
 ```
 
-## 🎯 Use Cases
+##  Use Cases
 
 ### Development & Testing
 
@@ -139,7 +139,7 @@ python main.py
 - Professional presentation interface
 - Real-time demonstration capabilities
 
-## 🛠️ Technical Details
+##  Technical Details
 
 ### Frontend Technologies
 
@@ -162,7 +162,7 @@ python main.py
 - **Memory Management**: Circular buffers for historical data
 - **Mobile Optimized**: Touch-friendly interface with responsive breakpoints
 
-## 🔮 Future Enhancements
+##  Future Enhancements
 
 Potential future additions to the web dashboard:
 

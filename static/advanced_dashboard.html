@@ -11,7 +11,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>🚀 Advanced Load Balancer Dashboard</h1>
+        <h1> Advanced Load Balancer Dashboard</h1>
         <p>Real-time monitoring, analytics, and management</p>
         <div class="status-indicator" id="connectionStatus"></div>
       </div>
@@ -20,7 +20,7 @@
         <div class="main-content">
           <!-- Overview Stats -->
           <div class="card">
-            <h2>📊 System Overview</h2>
+            <h2> System Overview</h2>
             <div class="stats-overview">
               <div class="stat-item">
                 <div class="label">Algorithm</div>
@@ -92,7 +92,7 @@
         <div class="sidebar">
           <!-- Server Status -->
           <div class="card">
-            <h2>🖥️ Server Status</h2>
+            <h2> Server Status</h2>
             <div class="servers-container" id="serversList">
               <!-- Servers will be populated here -->
             </div>
@@ -101,7 +101,7 @@
           <!-- Controls -->
           <div class="controls-panel">
             <div class="control-section">
-              <h3>⚙️ Monitoring</h3>
+              <h3> Monitoring</h3>
               <div class="refresh-controls">
                 <div class="auto-refresh-indicator" id="refreshIndicator"></div>
                 <select id="refreshInterval">
@@ -118,7 +118,7 @@
             </div>
 
             <div class="control-section">
-              <h3>➕ Add Server</h3>
+              <h3> Add Server</h3>
               <div class="form-row">
                 <div class="input-group">
                   <label>Host:</label>
@@ -392,7 +392,7 @@
           const healthClass = server.is_healthy
             ? "status-healthy"
             : "status-unhealthy";
-          const healthText = server.is_healthy ? "✅ Healthy" : "❌ Down";
+          const healthText = server.is_healthy ? " Healthy" : " Down";
 
           serverItem.innerHTML = `
                     <div class="server-info">

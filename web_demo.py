@@ -20,14 +20,14 @@ class WebDashboardDemo:
     
     def start_process(self, cmd, name):
         """Start a background process"""
-        print(f"🚀 Starting {name}...")
+        print(f"Starting {name}...")
         process = subprocess.Popen(cmd, shell=True, preexec_fn=os.setsid)
         self.processes.append((process, name))
         return process
     
     def cleanup(self, signum=None, frame=None):
         """Clean up all processes"""
-        print("\n🧹 Cleaning up processes...")
+        print("\nCleaning up processes...")
         for process, name in self.processes:
             try:
                 os.killpg(os.getpgid(process.pid), signal.SIGTERM)
@@ -51,14 +51,14 @@ class WebDashboardDemo:
     
     def run_demo(self):
         """Run the web dashboard demo"""
-        print("🌐 WEB DASHBOARD DEMO")
+        print("WEB DASHBOARD DEMO")
         print("=" * 50)
         
         # Set up signal handler for cleanup
         signal.signal(signal.SIGINT, self.cleanup)
         
         try:
-            print("\n📦 Step 1: Starting backend servers...")
+            print("\nStep 1: Starting backend servers...")
             
             # Start test backend servers
             self.start_process(f"{self.python_cmd} test_server.py --port 3001", "Backend Server 1")
@@ -68,30 +68,30 @@ class WebDashboardDemo:
             self.start_process(f"{self.python_cmd} test_server.py --port 3003 --delay 0.2", "Backend Server 3")
             time.sleep(2)
             
-            print("✅ Backend servers started!")
+            print("Backend servers started!")
             
-            print("\n⚖️  Step 2: Starting load balancer with web dashboard...")
+            print("\nStep 2: Starting load balancer with web dashboard...")
             self.start_process(f"{self.python_cmd} main.py --algorithm round_robin", "Load Balancer")
             
-            print("⏳ Waiting for load balancer to start...")
+            print("Waiting for load balancer to start...")
             if self.wait_for_server(self.dashboard_url):
-                print("✅ Load balancer is ready!")
+                print("Load balancer is ready!")
             else:
-                print("❌ Failed to start load balancer")
+                print("Failed to start load balancer")
                 return
             
-            print(f"\n🌐 Step 3: Opening web dashboard...")
+            print(f"\nStep 3: Opening web dashboard...")
             print(f"Dashboard URL: {self.dashboard_url}")
             
             # Open web browser
             try:
                 webbrowser.open(self.dashboard_url)
-                print("✅ Web browser opened!")
+                print("Web browser opened!")
             except Exception as e:
-                print(f"⚠️  Could not open browser automatically: {e}")
+                print(f"Could not open browser automatically: {e}")
                 print(f"Please manually open: {self.dashboard_url}")
             
-            print("\n🎯 Step 4: Running sample load tests...")
+            print("\nStep 4: Running sample load tests...")
             print("This will generate some traffic to populate the dashboard...")
             
             # Run a few load tests to populate the dashboard
@@ -104,20 +104,20 @@ class WebDashboardDemo:
                 )
                 time.sleep(2)
             
-            print("✅ Load tests completed!")
+            print("Load tests completed!")
             
-            print("\n🎉 WEB DASHBOARD DEMO READY!")
+            print("\nWEB DASHBOARD DEMO READY!")
             print("=" * 50)
             print(f"Dashboard URL: {self.dashboard_url}")
             print("\nWeb Dashboard Features:")
-            print("  📊 Real-time statistics and charts")
-            print("  🖥️  Server status monitoring")
-            print("  ➕ Add/remove servers dynamically")
-            print("  🔄 Auto-refresh controls")
-            print("  📈 Request distribution visualization")
-            print("  ⚡ Response time monitoring")
-            print("  🎯 Error rate tracking")
-            print("  🌐 Modern responsive web interface")
+            print("  Real-time statistics and charts")
+            print("  Server status monitoring")
+            print("  Add/remove servers dynamically")
+            print("  Auto-refresh controls")
+            print("  Request distribution visualization")
+            print("  Response time monitoring")
+            print("  Error rate tracking")
+            print("  Modern responsive web interface")
             
             print("\nTry these actions in the dashboard:")
             print("  1. Monitor real-time server statistics")
@@ -129,7 +129,7 @@ class WebDashboardDemo:
             print(f"  Load Test: {self.python_cmd} load_test.py --requests 50 --concurrent 5")
             print(f"  CLI Monitor: {self.python_cmd} monitor.py")
             
-            print("\n⌨️  Press Ctrl+C to stop all services")
+            print("\nPress Ctrl+C to stop all services")
             
             # Keep running until interrupted
             while True:
