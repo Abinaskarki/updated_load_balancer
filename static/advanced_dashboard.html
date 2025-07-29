@@ -11,7 +11,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1> Advanced Load Balancer Dashboard</h1>
+        <h1>Advanced Load Balancer Dashboard</h1>
         <p>Real-time monitoring, analytics, and management</p>
         <div class="status-indicator" id="connectionStatus"></div>
       </div>
@@ -20,7 +20,7 @@
         <div class="main-content">
           <!-- Overview Stats -->
           <div class="card">
-            <h2> System Overview</h2>
+            <h2>System Overview</h2>
             <div class="stats-overview">
               <div class="stat-item">
                 <div class="label">Algorithm</div>
@@ -92,7 +92,7 @@
         <div class="sidebar">
           <!-- Server Status -->
           <div class="card">
-            <h2> Server Status</h2>
+            <h2>Server Status</h2>
             <div class="servers-container" id="serversList">
               <!-- Servers will be populated here -->
             </div>
@@ -101,7 +101,7 @@
           <!-- Controls -->
           <div class="controls-panel">
             <div class="control-section">
-              <h3> Monitoring</h3>
+              <h3>Monitoring</h3>
               <div class="refresh-controls">
                 <div class="auto-refresh-indicator" id="refreshIndicator"></div>
                 <select id="refreshInterval">
@@ -118,17 +118,31 @@
             </div>
 
             <div class="control-section">
-              <h3> Add Server</h3>
+              <h3>Add Server</h3>
               <div class="form-row">
                 <div class="input-group">
                   <label>Host:</label>
-                  <input type="text" id="newServerHost" placeholder="localhost" value="localhost">
+                  <input
+                    type="text"
+                    id="newServerHost"
+                    placeholder="localhost"
+                    value="localhost"
+                  />
                 </div>
                 <div class="input-group">
                   <label>Port:</label>
-                  <input type="number" id="newServerPort" placeholder="3004" value="3004" min="1" max="65535">
+                  <input
+                    type="number"
+                    id="newServerPort"
+                    placeholder="3004"
+                    value="3004"
+                    min="1"
+                    max="65535"
+                  />
                 </div>
-                <button class="btn btn-success" onclick="addServer()">Add Server</button>
+                <button class="btn btn-success" onclick="addServer()">
+                  Add Server
+                </button>
               </div>
             </div>
 
@@ -137,13 +151,27 @@
               <div class="form-row">
                 <div class="input-group">
                   <label>Host:</label>
-                  <input type="text" id="removeServerHost" placeholder="localhost" value="localhost">
+                  <input
+                    type="text"
+                    id="removeServerHost"
+                    placeholder="localhost"
+                    value="localhost"
+                  />
                 </div>
                 <div class="input-group">
                   <label>Port:</label>
-                  <input type="number" id="removeServerPort" placeholder="3004" value="3004" min="1" max="65535">
+                  <input
+                    type="number"
+                    id="removeServerPort"
+                    placeholder="3004"
+                    value="3004"
+                    min="1"
+                    max="65535"
+                  />
                 </div>
-                <button class="btn btn-danger" onclick="removeServer()">Remove Server</button>
+                <button class="btn btn-danger" onclick="removeServer()">
+                  Remove Server
+                </button>
               </div>
             </div>
           </div>
@@ -421,7 +449,7 @@
 
         // If no servers, show empty charts
         if (serverKeys.length === 0) {
-          Object.values(charts).forEach(chart => {
+          Object.values(charts).forEach((chart) => {
             chart.data.labels = [];
             chart.data.datasets[0].data = [];
             chart.update("none");
@@ -437,12 +465,17 @@
         charts.request.update("none");
 
         // Response Times - only show healthy servers with valid response times
-        const healthyServers = serverData.filter(s => s.is_healthy && s.avg_response_time);
-        const healthyServerKeys = serverKeys.filter((key, index) => serverData[index].is_healthy && serverData[index].avg_response_time);
-        
+        const healthyServers = serverData.filter(
+          (s) => s.is_healthy && s.avg_response_time
+        );
+        const healthyServerKeys = serverKeys.filter(
+          (key, index) =>
+            serverData[index].is_healthy && serverData[index].avg_response_time
+        );
+
         charts.responseTime.data.labels = healthyServerKeys;
-        charts.responseTime.data.datasets[0].data = healthyServers.map((s) =>
-          parseFloat(s.avg_response_time.replace("s", "")) * 1000
+        charts.responseTime.data.datasets[0].data = healthyServers.map(
+          (s) => parseFloat(s.avg_response_time.replace("s", "")) * 1000
         );
         charts.responseTime.update("none");
 
