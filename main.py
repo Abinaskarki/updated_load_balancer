@@ -7,7 +7,7 @@ def create_app():
     parser = argparse.ArgumentParser(description='Advanced Load Balancer')
     parser.add_argument('--algorithm', choices=['round_robin', 'least_connections'], 
                        default='round_robin', help='Load balancing algorithm')
-    parser.add_argument('--port', type=int, default=8080, help='Port to run the load balancer on')
+    parser.add_argument('--port', type=int, default=8081, help='Port to run the load balancer on')
     parser.add_argument('--servers', default='servers.json', help='Path to servers configuration file')
     
     args = parser.parse_args()
